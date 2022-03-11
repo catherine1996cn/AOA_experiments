@@ -31,23 +31,7 @@ def TSP_plt(location,order):
     plt.show()
     return
 
-# #neigborhood
-# def get_two_edge(order):
-#     i = np.random.randint(0,(len(order)-1))
-#     edge1 = [i, i + 1]
-#     if i == len(order)-1:
-#         edge1[1] = 0
-#
-#     set_remove = set([i-1])
-#     if i == 0:
-#         set_remove = set([len(order)-1])
-#
-#     remain_set = set(range(len(order)))-set(edge1)-set_remove
-#     j = choice(list(remain_set))
-#     edge2=[j,j+1]
-#     if j+1 == len(order)-1:
-#         edge2[1] = 0
-#     return edge1,edge2
+
 
 def get_edge_and_evaluate(order,dist_mat,length):
     get_new = False
@@ -83,8 +67,6 @@ def get_edge_and_evaluate(order,dist_mat,length):
 
         length_change = length_add - length_minor
 
-        print("length_change", length_change)
-
 
         if length_change < 0:
         # revise i2--j1
@@ -104,7 +86,6 @@ def get_edge_and_evaluate(order,dist_mat,length):
 
             new_order = list1 + reverse_list + list3
             new_length = length+length_change
-            # length_change =0
             get_new = True
 
 
@@ -132,6 +113,7 @@ def pltshow(location,order):
 
 def local_search1(order,location, length,dist_mat,start_time):
     evaluate_total = 0
+    for_stop = 0
     while evaluate_total < 100000:
         evaluate_total +=1
 
@@ -141,18 +123,20 @@ def local_search1(order,location, length,dist_mat,start_time):
             length_change,new_order, new_length, evaluate_iter = evaluate_result
 
             evaluate_total += evaluate_iter
-
+            print("length_change", new_length-length)
             print("evaluate_time", evaluate_total)
             print("time is ", time.time() - start_time)
             print("current_best_length", new_length)
             print("best_order", new_order)
-            # import pdb
-            # pdb.set_trace()
-            order_to_calcu = new_order+[new_order[0]]
-            calculate_length = compute_total_dist(location, order_to_calcu)
-            print('calculate_length:', calculate_length)
-            import pdb
-            pdb.set_trace()
+
+            if new_length - length ==0:
+                for_stop += 1
+                if for_stop >3:
+                    break
+            # order_to_calcu = new_order+[new_order[0]]
+            # calculate_length = compute_total_dist(location, order_to_calcu)
+            # print('calculate_length:', calculate_length)
+
             pltshow(location, order)
 
         else:
@@ -164,77 +148,18 @@ def local_search1(order,location, length,dist_mat,start_time):
 
     pltshow(location, order)
 
-
-
     print("No better tour is obtained")
-    # print("time is ", time.time() - start_time)
-    print("best_order", order)
-    print("best_length", length)
+    # print("best_order", order)
+    # print("best_length", length)
 
     return order, length
 
 
 
 
-# def get_new_order(order, edge1,edge2):
-#     i1=edge1[0]
-#     i2=edge1[1]
-#     j1=edge2[0]
-#     j2=edge2[1]
-#     # import pdb
-#     # pdb.set_trace()
-#     #
-#     if j2 < i1:
-#         #revise j2--i1
-#         list1 = order[:j2]
-#         list2 = order[j2:i1]
-#         list2.reverse()
-#         list3 = order[i1:]
-#         new_order = list1 + list2 + list3
-#     elif i2 < j1:
-#     # revise i2--j1
-#         list1 = order[:i2]
-#         list2 = order[i2:j1]
-#         list2.reverse()
-#         list3 = order[j1:]
-#         new_order = list1 + list2 + list3
-#     return new_order
-#
-#
-# #iteration
-# def local_search (order, length,dist_mat,start_time):
-#     compute_time= 0
-#     total_time = 0
-#     calcutated_edges=[]
-#     while total_time  < 1000000:
-#         while compute_time <50:
-#             edge1,edge2 = get_two_edge(order)
-#             calcutated_edges.append((edge1+edge2).sort())
-#             if calcutated_edges.count((edge1+edge2).sort()) >1:
-#                 continue
-#             length_minor = dist_mat[edge1[0]][edge1[1]] + dist_mat[edge2[0]][edge2[1]]
-#             length_add = dist_mat[edge1[0]][edge2[0]] + dist_mat[edge1[1]][edge2[1]]
-#             length_change = length_add-length_minor
-#             compute_time += 1
-#             total_time += 1
-#             print("total_time =", total_time)
-#             if length_change < 0:
-#                 order = get_new_order(order,edge1,edge2)
-#                 length +=length_change
-#                 compute_time = 0
-#                 calcutated_edges = []
-#                 print("length", length)
-#
-#     print("time is ",time.time()-start_time)
-#     print("best_order", order)
-#     print("best_length", length)
-#     order_to_calcu = order.append(order[0])
-#     calculate_length = compute_total_dist(location, order_to_calcu )
-#     print('calculate_length:',calculate_length)
-#     return order, length
-
 
 if __name__ == "__main__":
+
     # location, dist_mat,length,start,order = initial1()
     location, dist_mat,length,start,order = initial2()
 
@@ -244,7 +169,3 @@ if __name__ == "__main__":
     start_time = time.time()
     order,length=local_search1(order, location,length,dist_mat,start_time)
 
-    # order = order.append(order[0])
-    #
-    # calculate_length = compute_total_dist(location,order)
-    # print("calculate_length=",calculate_length)
