@@ -15,5 +15,5 @@ Code:
   2. AOA_TSP_greedy_VP: 
      greedy for problem II.load costs ————> trans to distance matrix ————> follow 1
      
-  3. TSP_localsearch: two-edge change (inversion) neibors, first move, 40% stop.
-     import greedy from 1 and 2 as initial value ————> two edge change neigbor and evaluate ————> iterate until no better solution is obtained (for 8000 trys).
+  3. TSP_localsearch: two-edge change (inversion) neibors, first move, early stop.
+     import greedy from 1 and 2 to abtain initial values————> select initial solutions (best 20%) ————> two edge change neigbor and evaluate ————> iterate until no better solution is obtained (for 3 iterations).
